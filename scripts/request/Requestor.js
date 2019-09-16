@@ -23,7 +23,7 @@ function getWebSocketURL(requestor) {
 }
 
 function establishConnection(requestor, callback) {
-	requestor.socket = new WebSocket(getWebSocketURL(requestor));
+	requestor.socket = new WebSocket(getWebSocketURL(requestor), requestor.protocols);
 
 	// on open
 	requestor.socket.onopen = function() {
@@ -133,12 +133,13 @@ function stripURL(url) {
 }
 
 class Requestor {
-	constructor(websocketURL, httpURL, callback) {
+	constructor(websocketURL, httpURL, callback, protocols = []) {
 		this.websocketURL = stripURL(websocketURL);
 		this.httpURL = stripURL(httpURL);
 		this.requests = new Map();
 		this.pending = new Map();
 		this.isOpen = false;
+		this.protocols = protocols;
 		establishConnection(this, callback);
 	}
 	getHash(req) {
